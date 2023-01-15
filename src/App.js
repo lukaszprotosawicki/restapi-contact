@@ -1,25 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import { AppHeader } from "./AppHeader";
+import { ContactsList } from "./ContactsList";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export class App extends React.Component {
+  state = {
+    contacts: null,
+  };
+
+  componentDidMount() {
+    fetch("https://randomuser.me/api/?format=json&results=10")
+      .then((res) => res.json())
+      .then((json) => this.setState({ contacts: json.results }));
+  }
+
+  render() {
+    const contacts = this.state.contacts;
+    return (
+      <div className="App">
+        <AppHeader />
+        <main className="ui main text container">
+          {contacts ? <ContactsList contacts={contacts} /> : "Ładowanie..."}
+        </main>
+      </div>
+    );
+  }
 }
 
 export default App;
